@@ -10,6 +10,10 @@ app.get("/", function (req, res) {
     res.render("sign-up");
 })
 
+app.post('/signup', (req, res) => {
+    res.redirect('/test')
+});
+
 const getTest = async () => {
     var test = await client.raw('select * from users').then((result) => result[0])
     return test
@@ -21,10 +25,10 @@ const testFunc = async () => {
 }
 
 
-app.get('/signup', async (req, res) => {
+app.get('/test', async (req, res) => {
     let testVal = await testFunc()
     console.log(testVal)
-    res.render('signup', { data: testVal })
+    res.render('test', { data: testVal })
 });
 
 
