@@ -7,24 +7,24 @@ app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({ extended: true }))
 
 app.get("/", function (req, res) {
-    res.render("signup");
+    res.render("sign-up");
 })
 
-const getTest =  async() => {
-    var test = await client.raw('select * from users').then((result)=> result[0])
+const getTest = async () => {
+    var test = await client.raw('select * from users').then((result) => result[0])
     return test
 }
 
-const testFunc = async() => {
+const testFunc = async () => {
     var finalTest = await getTest()
-    return finalTest.map((val)=> (val.user_id))
+    return finalTest.map((val) => (val.user_id))
 }
 
 
-app.get('/signup',async (req, res) => {
+app.get('/signup', async (req, res) => {
     let testVal = await testFunc()
     console.log(testVal)
-   res.render('signup',{data:testVal}) 
+    res.render('signup', { data: testVal })
 });
 
 
