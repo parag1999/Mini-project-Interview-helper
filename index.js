@@ -7,7 +7,15 @@ app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({ extended: true }))
 
 app.get("/", function (req, res) {
-    res.render("sign-up");
+    res.render("login/login");
+})
+
+app.get("/studentSignup", function (req, res) {
+    res.render("signup/studentSignup");
+})
+
+app.get("/teacherSignup", function (req, res) {
+    res.render("signup/teacherSignup");
 })
 
 app.post('/signup', (req, res) => {
