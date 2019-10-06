@@ -1,7 +1,6 @@
 var express = require('express')
 var app = express()
 var bodyParser = require('body-parser')
-var client = require('./knexFile')
 var multer = require("multer");
 
 const upload = multer({dest: __dirname + '/uploads/images'});
@@ -10,7 +9,15 @@ app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({ extended: true }))
 
 app.get("/", function (req, res) {
-    res.render("signup");
+    res.render("login/login");
+})
+
+app.get("/studentSignup", function (req, res) {
+    res.render("signup/studentSignup");
+})
+
+app.get("/teacherSignup", function (req, res) {
+    res.render("signup/teacherSignup");
 })
 
 app.post('/signup', (req, res) => {
