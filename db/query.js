@@ -5,6 +5,9 @@ const getTest =  async() => {
     return test
 }
 
-const insertStudent = async() => {
-    var student = await client.raw('INSERT INTO student(user_name,fname)')
+const insertTeacher = async(fName,lName,userName,password) => {
+    var teacher = await client.raw('INSERT INTO teacher(user_name,fname,lname,password) VALUES(?,?,?,?)',[userName,fName,lName,password]).then(resp => resp[0].affectedRows).catch(err => console.log(err))
+    return teacher
 }
+
+module.exports = { insertTeacher }

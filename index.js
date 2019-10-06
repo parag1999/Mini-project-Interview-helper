@@ -2,6 +2,7 @@ var express = require('express')
 var app = express()
 var bodyParser = require('body-parser')
 var multer = require("multer");
+var { teacherInserted } = require('/home/parag/Desktop/dbms_project/db/controller')
 
 const upload = multer({dest: __dirname + '/uploads/images'});
 
@@ -19,6 +20,15 @@ app.get("/studentSignup", function (req, res) {
 app.get("/teacherSignup", function (req, res) {
     res.render("signup/teacherSignup");
 })
+
+app.post('/postTeacherSignup', async(req, res) => {
+    var fName = req.body.fname
+    var lName = req.body.lname
+    var userName = req.body.userName
+    var password = req.body.password
+    await teacherInserted(fName,lName,userName,password)
+    
+});
 
 app.post('/signup', (req, res) => {
     res.redirect('/test')
