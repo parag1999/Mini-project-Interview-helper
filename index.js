@@ -4,6 +4,8 @@ var bodyParser = require('body-parser')
 var multer = require("multer");
 var { teacherInserted } = require('/home/parag/Desktop/dbms_project/db/controller')
 
+var photo = ""
+
 const upload = multer({dest: __dirname + '/uploads/images'});
 
 app.set('view engine', 'ejs');
@@ -34,11 +36,15 @@ app.post('/signup', (req, res) => {
     res.redirect('/test')
 });
 
-app.post('/upload', upload.single('photo'), (req, res) => {
-    if(req.file) {
-        res.json(req.file);
-    }
-    else throw 'error';
+app.post('/postStudentSignup', upload.single('photo'), (req, res) => {
+    var fName = req.body.fname
+    var lName = req.body.lname
+    var userName = req.body.userName
+    var password = req.body.password
+    var collegeName = req.body.collegeName
+    var stream = req.body.stream
+    photo = req.file.path
+    res.redirect('test')
 });
 
 
@@ -52,7 +58,8 @@ app.post('/upload', upload.single('photo'), (req, res) => {
 app.get('/test',async (req, res) => {
     // let testVal = await testFunc()
     // console.log(testVal)
-   res.render('test') 
+    console.log(photo)
+   res.render('test',{photo:photo}) 
 });
 
 
