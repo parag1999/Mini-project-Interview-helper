@@ -1,0 +1,24 @@
+<% include ../partials/teacherHeader.ejs %>
+
+
+    <% questions.forEach(question => { %>
+        <div class="card">
+            <div class="card-header">
+                <%= question.subject %>
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">Question : </h5>
+                <p class="card-text">
+                    <%= question.question %>
+                </p>
+                <hr>
+                <h5 class="card-title">Answer : </h5>
+                <p class="card-text">
+                    <%= question.answer %>
+                </p>
+                <a href="#" class="btn btn-primary">Delete</a>
+            </div>
+        </div>
+        <br>
+        <br>
+        <% }) %>

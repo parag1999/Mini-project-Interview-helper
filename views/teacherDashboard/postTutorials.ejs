@@ -1,0 +1,19 @@
+<% include ../partials/teacherHeader.ejs %>
+    <br>
+    <br>
+    <form action="/postTutorials" method="POST">
+        <label>Subject</label>
+        <select class="form-control" name="subject">
+            <option>Data Structures</option>
+            <option>Algorithms</option>
+            <option>Computer Networks</option>
+            <option>Microprocessors</option>
+        </select>
+        <br>
+        <br>
+        <div class="form-group">
+            <label>Tutorial Link</label>
+            <input type="text" name="link" class="form-control">
+        </div>
+        <button>Post</button>
+    </form>

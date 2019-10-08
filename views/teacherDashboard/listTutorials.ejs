@@ -1,0 +1,19 @@
+<% include ../partials/teacherHeader.ejs %>
+
+
+    <% tutorials.forEach(tutorial => { %>
+        <div class="card">
+            <div class="card-header">
+                <%= tutorial.subject %>
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">Link : </h5>
+                <p class="card-text">
+                    <%= tutorial.link %>
+                </p>
+                <a href="#" class="btn btn-primary">Delete</a>
+            </div>
+        </div>
+        <br>
+        <br>
+        <% }) %>

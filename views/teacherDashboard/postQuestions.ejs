@@ -1,0 +1,29 @@
+<% include ../partials/teacherHeader.ejs %>
+    <br>
+    <br>
+    <form action="/postQuestions" method="POST">
+        <label>Subject</label>
+        <select class="form-control" name="subject">
+            <option>Data Structures</option>
+            <option>Algorithms</option>
+            <option>Computer Networks</option>
+            <option>Microprocessors</option>
+        </select>
+        <br>
+        <br>
+        <div class="form-group">
+            <label>Question</label>
+            <textarea class="form-control" rows="3" name="question"></textarea>
+        </div>
+        <br>
+        <br>
+        <div class="form-group">
+            <label>Answer</label>
+            <textarea class="form-control" rows="3" name="answer"></textarea>
+        </div>
+        <div class="form-group">
+            <label>Duration</label>
+            <input type="number" name="duration" class="form-control">
+        </div>
+        <button>Post</button>
+    </form>
