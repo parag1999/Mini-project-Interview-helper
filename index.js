@@ -3,7 +3,7 @@ let app = express()
 let bodyParser = require('body-parser')
 let multer = require("multer");
 const upload = multer({ dest: __dirname + '/uploads' });
-let { insertTeacher, insertStudent, teacherLogin, studentLogin } = require('C:/Users/ratho/Desktop/Palash/DBMS_Project/dbms_project/db/query')
+let query = require('/home/parag/Desktop/dbms_project/db/query')
 let cookieParser = require('cookie-parser')
 
 app.set('view engine', 'ejs');
@@ -15,6 +15,8 @@ app.use('/uploads', express.static('uploads'));
 var questionsList = []
 var tutorialsList = []
 
+// USER LOGIN AND SIGN UP
+
 app.get("/", function (req, res) {
     res.render("login/login");
 })
@@ -23,8 +25,8 @@ app.post('/signin', async (req, res) => {
     let user = {}
     user["userName"] = req.body.userName
     user["password"] = req.body.password
-    let teacherUser = await teacherLogin(user)
-    let studentUser = await studentLogin(user)
+    let teacherUser = await query.teacherLogin(user)
+    let studentUser = await query.studentLogin(user)
     if (req.cookies['testCookie']) {
         res.clearCookie('testCookie')
     }
@@ -36,7 +38,7 @@ app.post('/signin', async (req, res) => {
         }
         ), { path: '/' })
         console.log(req.cookies['testCookie'])
-        res.status(200).json({ message: "Correct User", user: teacherUser[1][0] })
+        res.redirect('/teacherProfile/'+teacherUser[1][0]["teacher_id"])
 
     }
     else if (studentUser[0]) {
@@ -68,7 +70,7 @@ app.post('/postTeacherSignup', async (req, res) => {
     teacher["lName"] = req.body.lname
     teacher["userName"] = req.body.userName
     teacher["password"] = req.body.password
-    let affectedRows = await insertTeacher(teacher)
+    let affectedRows = await query.insertTeacher(teacher)
     if (affectedRows) {
         res.redirect('/')
     }
@@ -89,7 +91,7 @@ app.post('/postStudentSignup', upload.single('photo'), async (req, res) => {
     student["collegeName"] = req.body.collegeName
     student["stream"] = req.body.stream
     student["photo"] = "uploads/" + req.file.filename
-    let affectedRows = await insertStudent(student)
+    let affectedRows = await query.insertStudent(student)
     if (affectedRows) {
         res.redirect('/')
     }
@@ -98,9 +100,98 @@ app.post('/postStudentSignup', upload.single('photo'), async (req, res) => {
     }
 });
 
+/////////////////////////////////////////
+// TEACHER AND QUESTIONS
+
+app.get('/teacherProfile/:teacher_id', async(req, res) => {
+    if(req.cookies["testCookie"]){
+        let teacher = await query.getTeacherDetail(req.params.teacher_id)
+        res.render('teacherDashboard/profile',{name:teacher[0].fname+teacher[0].lname})
+    }
+    else{
+        res.status(400).json({message:"You are not logged In"})
+    }
+    
+})
+
+app.get('/postQuestions', (req, res) => {
+    res.render('teacherDashboard/postQuestions')
+})
+
+app.post('/postQuestion', async (req, res) => {
+    if(req.cookies["testCookie"]){
+        let newQuestion = {}
+        newQuestion["subject"] = req.body.subject
+        newQuestion["question"] = req.body.question
+        newQuestion["answer"] = req.body.answer
+        newQuestion["duration"] = req.body.duration
+        newQuestion["userId"] = JSON.parse(req.cookies["testCookie"]).userId
+        let affectedRows = await query.insertQuestion(newQuestion)
+        if (affectedRows) {
+            res.redirect('/listQuestions/'+newQuestion.userId)
+        }
+        else {
+            res.status(400).json({ message: "Wrong Entry" })
+        }
+    }
+    else{
+        res.status(400).json({message:"You are not logged In"})
+    }
+
+})
+
+app.get('/listQuestions/:user_id',async (req, res) => {
+    if(req.cookies["testCookie"]){
+        let userId = req.params.user_id
+        let questionsList = await query.getQuestions(userId)
+        res.render('teacherDashboard/listQuestions', { questions: questionsList })
+    }
+    else{
+        res.status(400).json({message:"You are not logged In"})
+    }
+    
+})
+
+app.get('/deleteQuestion/:questionId', async(req, res) => {
+    if(req.cookies["testCookie"]){
+        let affectedRows = await query.deleteQuestion(req.params.questionId)
+        if(affectedRows){
+            let userId = JSON.parse(req.cookies["testCookie"]).userId
+            res.redirect('/listQuestions/'+userId)
+        }
+        else{
+            res.status(400).json({message:"Question wasn;t deleted"})   
+        }
+    }
+    else{
+        res.status(400).json({message:"You are not logged In"})
+    }
+});
+
+/////////////////////////////////////////////////////////////
+// TEACHER AND TUTORIALS
+
+
+app.get('/postTutorials', (req, res) => {
+    res.render('teacherDashboard/postTutorials')
+})
+
+app.post('/postTutorials', async(req, res) => {
+    var subject = req.body.subject
+    var link = req.body.link
+    var newTutorial = { subject: subject, link: link }
+    tutorialsList.push(newTutorial)
+    res.redirect('/listTutorials')
+})
 
 
 
+app.get('/listTutorials', (req, res) => {
+    res.render('teacherDashboard/listTutorials', { tutorials: tutorialsList })
+})
+
+
+//////////////////////////////////
 // Testing Functions Below
 
 app.post('/signup', (req, res) => {
@@ -111,44 +202,6 @@ app.get('/test', async (req, res) => {
     console.log(photo)
     res.render('test', { photo: photo })
 });
-
-app.get('/teacherprofile', (req, res) => {
-    res.render('teacherDashboard/profile')
-})
-
-app.get('/postQuestions', (req, res) => {
-    res.render('teacherDashboard/postQuestions')
-})
-
-app.post('/postQuestions', (req, res) => {
-    var subject = req.body.subject
-    var question = req.body.question
-    var answer = req.body.answer
-    var duration = req.body.duration
-    var newQuestion = { subject: subject, question: question, answer: answer, duration: duration }
-    questionsList.push(newQuestion)
-    res.redirect('/listQuestions')
-})
-
-app.get('/postTutorials', (req, res) => {
-    res.render('teacherDashboard/postTutorials')
-})
-
-app.post('/postTutorials', (req, res) => {
-    var subject = req.body.subject
-    var link = req.body.link
-    var newTutorial = { subject: subject, link: link }
-    tutorialsList.push(newTutorial)
-    res.redirect('/listTutorials')
-})
-
-app.get('/listQuestions', (req, res) => {
-    res.render('teacherDashboard/listQuestions', { questions: questionsList })
-})
-
-app.get('/listTutorials', (req, res) => {
-    res.render('teacherDashboard/listTutorials', { tutorials: tutorialsList })
-})
 
 
 app.listen(3000, () => {
