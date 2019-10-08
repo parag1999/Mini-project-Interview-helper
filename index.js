@@ -3,7 +3,7 @@ let app = express()
 let bodyParser = require('body-parser')
 let multer = require("multer");
 const upload = multer({dest: __dirname + '/uploads'});
-let { teacherInserted, studentInserted, teacherLoggedIn, studentLoggedIn } = require('/home/parag/Desktop/dbms_project/db/controller')
+let { insertTeacher, insertStudent, teacherLogin, studentLogin } = require('/home/parag/Desktop/dbms_project/db/query')
 let cookieParser = require('cookie-parser')
 
 app.set('view engine', 'ejs');
@@ -19,8 +19,8 @@ app.post('/signin', async (req, res) => {
     let user ={}
     user["userName"] = req.body.userName
     user["password"] = req.body.password
-    let teacherUser = await teacherLoggedIn(user)
-    let studentUser = await studentLoggedIn(user)
+    let teacherUser = await teacherLogin(user)
+    let studentUser = await studentLogin(user)
     if(req.cookies['testCookie']){
         res.clearCookie('testCookie')
     }
@@ -62,7 +62,7 @@ app.post('/postTeacherSignup', async(req, res) => {
     teacher["lName"] = req.body.lname
     teacher["userName"] = req.body.userName
     teacher["password"] = req.body.password
-    let affectedRows = await teacherInserted(teacher)
+    let affectedRows = await insertTeacher(teacher)
     if(affectedRows){
         res.redirect('/')
     }
@@ -83,7 +83,7 @@ app.post('/postStudentSignup', upload.single('photo'),async (req, res) => {
     student["collegeName"] = req.body.collegeName
     student["stream"] = req.body.stream
     student["photo"] = "uploads/"+req.file.filename
-    let affectedRows = await studentInserted(student)
+    let affectedRows = await insertStudent(student)
     if(affectedRows){
         res.redirect('/')
     }

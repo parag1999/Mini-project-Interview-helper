@@ -17,12 +17,22 @@ const insertStudent = async(student) => {
 
 const teacherLogin = async(teacher) => {
     var teacher = await client.raw('SELECT * FROM teacher WHERE user_name=? AND password=?',[teacher.userName,teacher.password]).then(result => result[0]).catch(err => console.log(err))
-    return teacher
+    if(teacher.length){
+        return [true,teacher]
+    }
+    else{
+        return [false,teacher]
+    }
 }
 
 const studentLogin = async(student) => {
     var student = await client.raw('SELECT * FROM student WHERE user_name=? AND password=?',[student.userName,student.password]).then(result => result[0]).catch(err => console.log(err))
-    return student
+    if(student.length){
+        return [true,student]
+    }
+    else{
+        return [false,student]
+    }
 }
 
 module.exports = { insertTeacher, insertStudent, teacherLogin, studentLogin }
