@@ -12,8 +12,6 @@ app.use(bodyParser.urlencoded({ extended: true }))
 app.use('/uploads', express.static('uploads'));
 
 
-var questionsList = []
-var tutorialsList = []
 
 // USER LOGIN AND SIGN UP
 
@@ -38,7 +36,7 @@ app.post('/signin', async (req, res) => {
         }
         ), { path: '/' })
         console.log(req.cookies['testCookie'])
-        res.redirect('/teacherProfile/'+teacherUser[1][0]["teacher_id"])
+        res.redirect('/teacherProfile')
 
     }
     else if (studentUser[0]) {
@@ -103,9 +101,9 @@ app.post('/postStudentSignup', upload.single('photo'), async (req, res) => {
 /////////////////////////////////////////
 // TEACHER AND QUESTIONS
 
-app.get('/teacherProfile/:teacher_id', async(req, res) => {
+app.get('/teacherProfile', async(req, res) => {
     if(req.cookies["testCookie"]){
-        let teacher = await query.getTeacherDetail(req.params.teacher_id)
+        let teacher = await query.getTeacherDetail(JSON.parse(req.cookies["testCookie"]).userId)
         res.render('teacherDashboard/profile',{name:teacher[0].fname+teacher[0].lname})
     }
     else{
@@ -128,7 +126,7 @@ app.post('/postQuestion', async (req, res) => {
         newQuestion["userId"] = JSON.parse(req.cookies["testCookie"]).userId
         let affectedRows = await query.insertQuestion(newQuestion)
         if (affectedRows) {
-            res.redirect('/listQuestions/'+newQuestion.userId)
+            res.redirect('/listQuestions')
         }
         else {
             res.status(400).json({ message: "Wrong Entry" })
@@ -140,9 +138,9 @@ app.post('/postQuestion', async (req, res) => {
 
 })
 
-app.get('/listQuestions/:user_id',async (req, res) => {
+app.get('/listQuestions',async (req, res) => {
     if(req.cookies["testCookie"]){
-        let userId = req.params.user_id
+        let userId = JSON.parse(req.cookies["testCookie"]).userId
         let questionsList = await query.getQuestions(userId)
         res.render('teacherDashboard/listQuestions', { questions: questionsList })
     }
@@ -160,7 +158,7 @@ app.get('/deleteQuestion/:questionId', async(req, res) => {
             res.redirect('/listQuestions/'+userId)
         }
         else{
-            res.status(400).json({message:"Question wasn;t deleted"})   
+            res.status(400).json({message:"Question wasn't deleted"})   
         }
     }
     else{
@@ -176,19 +174,54 @@ app.get('/postTutorials', (req, res) => {
     res.render('teacherDashboard/postTutorials')
 })
 
-app.post('/postTutorials', async(req, res) => {
-    var subject = req.body.subject
-    var link = req.body.link
-    var newTutorial = { subject: subject, link: link }
-    tutorialsList.push(newTutorial)
-    res.redirect('/listTutorials')
+app.post('/postTutorial', async(req, res) => {
+    if(req.cookies["testCookie"]){
+        var newTutorial = {}
+        newTutorial["subject"] = req.body.subject
+        newTutorial["link"] = req.body.link
+        newTutorial["userId"] = JSON.parse(req.cookies["testCookie"]).userId
+        let affectedRows = await query.insertTutorial(newTutorial)
+        if (affectedRows) {
+            res.redirect('/listTutorials')
+        }
+        else {
+            res.status(400).json({ message: "Wrong Entry" })
+        }
+    }
+    else{
+        res.status(400).json({message:"You are not logged In"})
+    }
 })
 
 
 
-app.get('/listTutorials', (req, res) => {
-    res.render('teacherDashboard/listTutorials', { tutorials: tutorialsList })
+app.get('/listTutorials', async(req, res) => {
+    if(req.cookies["testCookie"]){
+        let userId = JSON.parse(req.cookies["testCookie"]).userId
+        let tutorialsList = await query.getTutorials(userId)
+        res.render('teacherDashboard/listTutorials', { tutorials: tutorialsList })
+    }
+    else{
+        res.status(400).json({message:"You are not logged In"})
+    }
+    
 })
+
+app.get('/deleteTutorial/:tutorialId', async(req, res) => {
+    if(req.cookies["testCookie"]){
+        let affectedRows = await query.deleteTutorial(req.params.tutorialId)
+        if(affectedRows){
+            let userId = JSON.parse(req.cookies["testCookie"]).userId
+            res.redirect('/listTutorials/'+userId)
+        }
+        else{
+            res.status(400).json({message:"Tutorial wasn't deleted"})   
+        }
+    }
+    else{
+        res.status(400).json({message:"You are not logged In"})
+    }
+});
 
 
 //////////////////////////////////

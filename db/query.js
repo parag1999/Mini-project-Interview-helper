@@ -55,4 +55,21 @@ const deleteQuestion = async(questionId) => {
     return question
 }
 
-module.exports = { insertTeacher, insertStudent, teacherLogin, studentLogin, insertQuestion, getQuestions, getTeacherDetail, deleteQuestion }
+const insertTutorial = async(tutorial) => {
+    var tutorial = await client.raw('INSERT INTO tutorials(link,subject,user_id) VALUES(?,?,?)',[tutorial.link,tutorial.subject,tutorial.userId]).then(resp => resp[0].affectedRows).catch(err => console.log(err))
+    return tutorial
+}
+
+const getTutorials = async(userId) => {
+    var tutorials = await client.raw('SELECT * FROM tutorials WHERE user_id=?',[userId]).then(result => result[0]).catch(err => console.log(err))
+    return tutorials
+}
+
+const deleteTutorial = async(tutorialId) => {
+    var tutorial = await client.raw('DELETE FROM tutorials WHERE tutorial_id=?',[tutorialId]).then(resp => resp[0].affectedRows).catch(err => console.log(err))
+    return tutorial
+}
+
+
+module.exports = { insertTeacher, insertStudent, teacherLogin, studentLogin, insertQuestion, getQuestions, getTeacherDetail, deleteQuestion, 
+                    insertTutorial, getTutorials, deleteTutorial}
