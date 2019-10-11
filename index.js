@@ -3,7 +3,7 @@ let app = express()
 let bodyParser = require('body-parser')
 let multer = require("multer");
 const upload = multer({ dest: __dirname + '/uploads' });
-let query = require('/home/parag/Desktop/dbms_project/db/query')
+let query = require('C:/Users/ratho/Desktop/Palash/DBMS_Project/dbms_project/db/query')
 let cookieParser = require('cookie-parser')
 
 app.set('view engine', 'ejs');
@@ -11,7 +11,14 @@ app.use(cookieParser())
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use('/uploads', express.static('uploads'));
 
-
+const selectQuestionsList = [{ subject: "Data Structures", question: "sdgsfgasg", answer: "vasfvfsdv", duration: 2 },
+{ subject: "Data Structures", question: "sdgsfgasg", answer: "vasfvfsdv", duration: 2 },
+{ subject: "Data Structures", question: "sdgsfgasg", answer: "vasfvfsdv", duration: 2 },
+{ subject: "Algorithms", question: "sdgsfgasg", answer: "vasfvfsdv", duration: 2 },
+{ subject: "Algorithms", question: "sdgsfgasg", answer: "vasfvfsdv", duration: 2 },
+{ subject: "Microprocessors", question: "sdgsfgasg", answer: "vasfvfsdv", duration: 2 },
+{ subject: "Microprocessors", question: "sdgsfgasg", answer: "vasfvfsdv", duration: 2 },
+]
 
 // USER LOGIN AND SIGN UP
 
@@ -101,15 +108,15 @@ app.post('/postStudentSignup', upload.single('photo'), async (req, res) => {
 /////////////////////////////////////////
 // TEACHER AND QUESTIONS
 
-app.get('/teacherProfile', async(req, res) => {
-    if(req.cookies["testCookie"]){
+app.get('/teacherProfile', async (req, res) => {
+    if (req.cookies["testCookie"]) {
         let teacher = await query.getTeacherDetail(JSON.parse(req.cookies["testCookie"]).userId)
-        res.render('teacherDashboard/profile',{name:teacher[0].fname+teacher[0].lname})
+        res.render('teacherDashboard/profile', { name: teacher[0].fname + teacher[0].lname })
     }
-    else{
-        res.status(400).json({message:"You are not logged In"})
+    else {
+        res.status(400).json({ message: "You are not logged In" })
     }
-    
+
 })
 
 app.get('/postQuestions', (req, res) => {
@@ -117,7 +124,7 @@ app.get('/postQuestions', (req, res) => {
 })
 
 app.post('/postQuestion', async (req, res) => {
-    if(req.cookies["testCookie"]){
+    if (req.cookies["testCookie"]) {
         let newQuestion = {}
         newQuestion["subject"] = req.body.subject
         newQuestion["question"] = req.body.question
@@ -132,37 +139,37 @@ app.post('/postQuestion', async (req, res) => {
             res.status(400).json({ message: "Wrong Entry" })
         }
     }
-    else{
-        res.status(400).json({message:"You are not logged In"})
+    else {
+        res.status(400).json({ message: "You are not logged In" })
     }
 
 })
 
-app.get('/listQuestions',async (req, res) => {
-    if(req.cookies["testCookie"]){
+app.get('/listQuestions', async (req, res) => {
+    if (req.cookies["testCookie"]) {
         let userId = JSON.parse(req.cookies["testCookie"]).userId
         let questionsList = await query.getQuestions(userId)
         res.render('teacherDashboard/listQuestions', { questions: questionsList })
     }
-    else{
-        res.status(400).json({message:"You are not logged In"})
+    else {
+        res.status(400).json({ message: "You are not logged In" })
     }
-    
+
 })
 
-app.get('/deleteQuestion/:questionId', async(req, res) => {
-    if(req.cookies["testCookie"]){
+app.get('/deleteQuestion/:questionId', async (req, res) => {
+    if (req.cookies["testCookie"]) {
         let affectedRows = await query.deleteQuestion(req.params.questionId)
-        if(affectedRows){
+        if (affectedRows) {
             let userId = JSON.parse(req.cookies["testCookie"]).userId
-            res.redirect('/listQuestions/'+userId)
+            res.redirect('/listQuestions/' + userId)
         }
-        else{
-            res.status(400).json({message:"Question wasn't deleted"})   
+        else {
+            res.status(400).json({ message: "Question wasn't deleted" })
         }
     }
-    else{
-        res.status(400).json({message:"You are not logged In"})
+    else {
+        res.status(400).json({ message: "You are not logged In" })
     }
 });
 
@@ -174,8 +181,8 @@ app.get('/postTutorials', (req, res) => {
     res.render('teacherDashboard/postTutorials')
 })
 
-app.post('/postTutorial', async(req, res) => {
-    if(req.cookies["testCookie"]){
+app.post('/postTutorial', async (req, res) => {
+    if (req.cookies["testCookie"]) {
         var newTutorial = {}
         newTutorial["subject"] = req.body.subject
         newTutorial["link"] = req.body.link
@@ -188,41 +195,68 @@ app.post('/postTutorial', async(req, res) => {
             res.status(400).json({ message: "Wrong Entry" })
         }
     }
-    else{
-        res.status(400).json({message:"You are not logged In"})
+    else {
+        res.status(400).json({ message: "You are not logged In" })
     }
 })
 
 
 
-app.get('/listTutorials', async(req, res) => {
-    if(req.cookies["testCookie"]){
+app.get('/listTutorials', async (req, res) => {
+    if (req.cookies["testCookie"]) {
         let userId = JSON.parse(req.cookies["testCookie"]).userId
         let tutorialsList = await query.getTutorials(userId)
         res.render('teacherDashboard/listTutorials', { tutorials: tutorialsList })
     }
-    else{
-        res.status(400).json({message:"You are not logged In"})
+    else {
+        res.status(400).json({ message: "You are not logged In" })
     }
-    
+
 })
 
-app.get('/deleteTutorial/:tutorialId', async(req, res) => {
-    if(req.cookies["testCookie"]){
+app.get('/deleteTutorial/:tutorialId', async (req, res) => {
+    if (req.cookies["testCookie"]) {
         let affectedRows = await query.deleteTutorial(req.params.tutorialId)
-        if(affectedRows){
+        if (affectedRows) {
             let userId = JSON.parse(req.cookies["testCookie"]).userId
-            res.redirect('/listTutorials/'+userId)
+            res.redirect('/listTutorials/' + userId)
         }
-        else{
-            res.status(400).json({message:"Tutorial wasn't deleted"})   
+        else {
+            res.status(400).json({ message: "Tutorial wasn't deleted" })
         }
     }
-    else{
-        res.status(400).json({message:"You are not logged In"})
+    else {
+        res.status(400).json({ message: "You are not logged In" })
     }
 });
 
+///////////////////////////////////////
+// Student Dashboard //
+
+app.get('/studentProfile', (req, res) => {
+    res.render('studentDashboard/profile')
+})
+
+app.get('/createNoteModal', (req, res) => {
+    res.render('studentDashboard/createNoteModal')
+})
+
+app.get('/selectQuestions', (req, res) => {
+    res.render('studentDashboard/selectQuestions')
+})
+
+app.post('/createNote', (req, res) => {
+    var noteName = req.body.noteName
+    var subject = req.body.subject
+    console.log(noteName)
+    console.log(subject)
+    res.redirect('/selectQuestions')
+})
+
+app.get('/selectQuestions', (req, res) => {
+    res.render('studentDashboard/selectQuestions', { selectQuestions: selectQuestionsList })
+
+})
 
 //////////////////////////////////
 // Testing Functions Below
@@ -235,6 +269,7 @@ app.get('/test', async (req, res) => {
     console.log(photo)
     res.render('test', { photo: photo })
 });
+
 
 
 app.listen(3000, () => {
