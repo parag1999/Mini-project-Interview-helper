@@ -1,7 +1,39 @@
 <% include ../partials/studentHeader.ejs %>
-    <div>
+    <form action="/saveNotesQuestions" method="POST">
+    <div class="jumbotron" style="background:transparent !important">
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label>Note ID</label>
+                <input value="<%= note_id %>" readonly type="number" name="noteId" class="form-control">
+            </div>
+            <div class="form-group col-md-6">
+                <label>Subject</label>
+                <input value="<%= subject %>" readonly type="text" name="subject" class="form-control">
+            </div>
+        </div>
         <h1>Select questions</h1>
         <% selectQuestions.forEach(question => { %>
-
-            <% }) %>
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Question : </h5>
+                    <p class="card-text">
+                        <%= question.question %>
+                    </p>
+                    <hr>
+                    <h5 class="card-title">Answer : </h5>
+                    <p class="card-text">
+                        <%= question.answer %>
+                    </p>
+                </div>
+                <div class="form-check mx-3 py-2">
+                        <input class="form-check-input" type="checkbox" name="<%= question.question_id %>" id="<%= question.question_id %>">
+                        <label class="form-check-label" for="<%= question.question_id %>">
+                          Select This Question
+                        </label>
+                </div>
+            </div>
+        <% }) %>
+        <br>
+        <button type="submit" class="btn btn-primary">Add Questions</button>
     </div>
+</form>

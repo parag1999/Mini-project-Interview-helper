@@ -1,0 +1,19 @@
+<% include ../partials/studentHeader.ejs %>
+
+    <div class="jumbotron" style="background:transparent !important">
+    <% questions.forEach(question => { %>
+        <div class="card my-3">
+            <div class="card-body">
+                <h5 class="card-title">Question : </h5>
+                <p class="card-text">
+                    <%= question.question %>
+                </p>
+                <hr>
+                <h5 class="card-title">Answer : </h5>
+                <p class="card-text">
+                    <%= question.answer %>
+                </p>
+            </div>
+        </div>
+    <% }) %>
+    </div>

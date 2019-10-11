@@ -12,11 +12,13 @@
         crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
         crossorigin="anonymous"></script>
-
+    <script src="https://kit.fontawesome.com/13fa977ac7.js" crossorigin="anonymous"></script>
+    
     <body>
         <div>
             <nav class="navbar navbar-expand-lg  navbar-dark bg-dark">
-                <a class="navbar-brand" href="/teacherProfile">NoteMaker</a>
+                <span style="color:white; padding-right: 4px;" class="fas fa-book"></span>
+                <a class="navbar-brand" href="/studentProfile">NoteMaker</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
                     aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -25,7 +27,6 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <div class="form-inline my-2 my-lg-0 ml-auto">
                         <button class="navbar-brand" class="btn btn-outline-success" data-toggle="modal" data-target="#exampleModal">Create Note</button>
-
                         <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                             <div class="modal-dialog" role="document">
                                 <div class="modal-content">
@@ -60,12 +61,14 @@
                                             <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
                                         </div>
                                     </form>
-
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
+                <form method="POST" action="/logout">
+                    <button>Logout</button>
+                </form>
             </nav>
         </div>
     </body>
