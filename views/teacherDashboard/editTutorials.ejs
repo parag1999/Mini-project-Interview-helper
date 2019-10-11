@@ -1,6 +1,11 @@
 <% include ../partials/teacherHeader.ejs %>
     <div class="jumbotron" style="background:transparent !important">
-        <form action="/postTutorial" method="POST">
+        <form action="/updateTutorial" method="POST">
+            <div class="form-group">
+                <label>Question ID</label>
+                <input value="<%= tutorial.tutorial_id %>" readonly type="number" name="Id" class="form-control">
+            </div>
+
             <label>Subject</label>
             <select class="form-control" name="subject">
                 <% subjectOptions.forEach(val => { %>
@@ -11,10 +16,10 @@
             <br>
             <div class="form-group">
                 <label>Tutorial Link</label>
-                <input type="text" name="link" class="form-control">
+                <input value="<%= tutorial.link %>" type="text" name="link" class="form-control">
             </div>
             <div class="text-center">
-                <button class="btn btn-primary">Post</button>
+                <button class="btn btn-primary">Update</button>
             </div>
         </form>
     </div>
