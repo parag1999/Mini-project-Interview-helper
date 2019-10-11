@@ -11,7 +11,7 @@ app.use(cookieParser())
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use('/uploads', express.static('uploads'));
 
-
+let subjectOptions = ["Data Structures","Algorithms","Computer Networks","Microprocessors"]
 
 // USER LOGIN AND SIGN UP
 
@@ -113,7 +113,7 @@ app.get('/teacherProfile', async(req, res) => {
 })
 
 app.get('/postQuestions', (req, res) => {
-    res.render('teacherDashboard/postQuestions')
+    res.render('teacherDashboard/postQuestions',{subjectOptions:subjectOptions})
 })
 
 app.post('/postQuestion', async (req, res) => {
@@ -166,12 +166,52 @@ app.get('/deleteQuestion/:questionId', async(req, res) => {
     }
 });
 
+
+app.get('/editQuestion/:questionId', async(req, res) => {
+    if(req.cookies["testCookie"]){
+        let question = await query.getQuestionById(req.params.questionId)
+        let subject = question.subject
+        let subjects = [...subjectOptions]
+        let i = subjects.findIndex(val => val===subject)
+        let first = subjects[0]
+        subjects.splice(0,1,subjects[i])
+        subjects[i] = first
+        res.render('teacherDashboard/editQuestions',{question:question, subjectOptions:subjects})
+    }
+    else{
+        res.status(400).json({message:"You are not logged In"})
+    }
+});
+
+app.post('/updateQuestion', async (req, res) => {
+    if(req.cookies["testCookie"]){
+        let newQuestion = {}
+        newQuestion["subject"] = req.body.subject
+        newQuestion["question"] = req.body.question
+        newQuestion["answer"] = req.body.answer
+        newQuestion["duration"] = req.body.duration
+        newQuestion["question_id"] = req.body.Id
+        console.log(req.body)
+        let affectedRows = await query.updateQuestion(newQuestion)
+        if (affectedRows) {
+            res.redirect('/listQuestions')
+        }
+        else {
+            res.status(400).json({ message: "Wrong Entry" })
+        }
+    }
+    else{
+        res.status(400).json({message:"You are not logged In"})
+    }
+
+})
+
 /////////////////////////////////////////////////////////////
 // TEACHER AND TUTORIALS
 
 
 app.get('/postTutorials', (req, res) => {
-    res.render('teacherDashboard/postTutorials')
+    res.render('teacherDashboard/postTutorials',{subjectOptions:subjectOptions})
 })
 
 app.post('/postTutorial', async(req, res) => {
@@ -222,6 +262,43 @@ app.get('/deleteTutorial/:tutorialId', async(req, res) => {
         res.status(400).json({message:"You are not logged In"})
     }
 });
+
+app.get('/editTutorial/:tutorialId', async(req, res) => {
+    if(req.cookies["testCookie"]){
+        let tutorial = await query.getTutorialById(req.params.tutorialId)
+        let subject = tutorial.subject
+        let subjects = [...subjectOptions]
+        let i = subjects.findIndex(val => val===subject)
+        let first = subjects[0]
+        subjects.splice(0,1,subjects[i])
+        subjects[i] = first
+        res.render('teacherDashboard/editTutorials',{tutorial:tutorial, subjectOptions:subjects})
+    }
+    else{
+        res.status(400).json({message:"You are not logged In"})
+    }
+});
+
+app.post('/updateTutorial', async (req, res) => {
+    if(req.cookies["testCookie"]){
+        let newTutorial = {}
+        newTutorial["subject"] = req.body.subject
+        newTutorial["link"] = req.body.link
+        newTutorial["tutorial_id"] = req.body.Id
+        console.log(req.body)
+        let affectedRows = await query.updateTutorial(newTutorial)
+        if (affectedRows) {
+            res.redirect('/listTutorials')
+        }
+        else {
+            res.status(400).json({ message: "Wrong Entry" })
+        }
+    }
+    else{
+        res.status(400).json({message:"You are not logged In"})
+    }
+
+})
 
 
 //////////////////////////////////

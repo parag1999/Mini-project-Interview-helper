@@ -40,6 +40,11 @@ const insertQuestion = async(question) => {
     return question
 }
 
+const getQuestionById = async(questionId) => {
+    var questions = await client.raw('SELECT * FROM questions WHERE question_id=?',[questionId]).then(result => result[0]).catch(err => console.log(err))
+    return questions[0]
+}
+
 const getQuestions = async(userId) => {
     var questions = await client.raw('SELECT * FROM questions WHERE user_id=?',[userId]).then(result => result[0]).catch(err => console.log(err))
     return questions
@@ -52,6 +57,11 @@ const getTeacherDetail = async(userId) => {
 
 const deleteQuestion = async(questionId) => {
     var question = await client.raw('DELETE FROM questions WHERE question_id=?',[questionId]).then(resp => resp[0].affectedRows).catch(err => console.log(err))
+    return question
+}
+
+const updateQuestion = async(question) => {
+    var question = await client.raw('UPDATE questions SET question=?,answer=?,subject=?,duration=? WHERE question_id=?',[question.question,question.answer,question.subject,question.duration,question.question_id]).then(resp => resp[0].affectedRows).catch(err => console.log(err))
     return question
 }
 
@@ -70,6 +80,16 @@ const deleteTutorial = async(tutorialId) => {
     return tutorial
 }
 
+const updateTutorial = async(tutorial) => {
+    var tutorial = await client.raw('UPDATE tutorials SET subject=?,link=? WHERE tutorial_id=?',[tutorial.subject,tutorial.link,tutorial.tutorial_id]).then(resp => resp[0].affectedRows).catch(err => console.log(err))
+    return tutorial
+}
 
-module.exports = { insertTeacher, insertStudent, teacherLogin, studentLogin, insertQuestion, getQuestions, getTeacherDetail, deleteQuestion, 
-                    insertTutorial, getTutorials, deleteTutorial}
+const getTutorialById = async(tutorialId) => {
+    var tutorials = await client.raw('SELECT * FROM tutorials WHERE tutorial_id=?',[tutorialId]).then(result => result[0]).catch(err => console.log(err))
+    return tutorials[0]
+}
+
+
+module.exports = { insertTeacher, insertStudent, teacherLogin, studentLogin, insertQuestion, getQuestions, getQuestionById, getTeacherDetail, deleteQuestion, 
+                    updateQuestion, insertTutorial, getTutorials, deleteTutorial, updateTutorial, getTutorialById }

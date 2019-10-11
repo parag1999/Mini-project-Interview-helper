@@ -1,6 +1,10 @@
 <% include ../partials/teacherHeader.ejs %>
     <div class="jumbotron" style="background:transparent !important">
-        <form action="/postQuestion" method="POST">
+        <form action="/updateQuestion" method="POST">
+            <div class="form-group">
+                <label>Question ID</label>
+                <input value="<%= question.question_id %>" readonly type="number" name="Id" class="form-control">
+            </div>
             <label>Subject</label>
             <select class="form-control" name="subject">
                 <% subjectOptions.forEach(val => { %>
@@ -11,20 +15,21 @@
             <br>
             <div class="form-group">
                 <label>Question</label>
-                <textarea class="form-control" rows="3" name="question"></textarea>
+                <textarea class="form-control" rows="3" name="question"><%= question.question %></textarea>
             </div>
             <br>
             <br>
             <div class="form-group">
                 <label>Answer</label>
-                <textarea class="form-control" rows="3" name="answer"></textarea>
+                <textarea class="form-control" rows="3" name="answer"><%= question.answer %></textarea>
             </div>
             <div class="form-group">
                 <label>Duration</label>
-                <input type="number" name="duration" class="form-control">
+                <input value="<%= question.duration %>" type="number" name="duration" class="form-control">
             </div>
             <div class="text-center">
-                <button class="btn btn-primary">Post</button>
+                <button class="btn btn-primary">Update</button>
             </div>
+            
         </form>
     </div>
