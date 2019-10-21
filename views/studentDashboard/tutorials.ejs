@@ -1,0 +1,23 @@
+<% include ../partials/studentHeader.ejs %>
+
+    <div class="jumbotron" style="background:transparent !important">
+            <form action="/filterTutorials" method="POST">
+                <select class="form-control" name="subject" onchange="this.form.submit()">
+                        <% subjectOptions.forEach(val => { %>
+                            <option value="<%= val %>"><%= val %></option>
+                        <% }) %>
+                </select>
+            </form>
+    
+    <% tutorials.forEach(tutorial => { %>
+        <div class="card my-3">
+            <div class="card-body">
+                <h5 class="card-title"><%= tutorial.subject %></h5>
+                <p class="card-text">
+                    <iframe src="https://www.youtube.com/embed<%= tutorial.link %>"></iframe>
+                    
+                </p>
+            </div>
+        </div>
+    <% }) %>
+    </div>

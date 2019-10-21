@@ -126,6 +126,17 @@ const getQuestionsForNotes = async(noteId) => {
     return questions
 }
 
+const getFilteredTutorials = async(subject) => {
+    if(subject.toLowerCase() === 'all'){
+        var tutorials = await client.raw('SELECT * FROM tutorials').then(result => result[0]).catch(err => console.log(err))
+    }
+    else{
+        var tutorials = await client.raw('SELECT * FROM tutorials WHERE subject=?',[subject]).then(result => result[0]).catch(err => console.log(err))
+    }
+    return tutorials
+}
+
+
 module.exports = { insertTeacher, insertStudent, teacherLogin, studentLogin, insertQuestion, getQuestions, getQuestionById, getTeacherDetail, deleteQuestion, 
                     updateQuestion, insertTutorial, getTutorials, deleteTutorial, updateTutorial, getTutorialById, insertNote, getFilteredQuestions,
-                    insertNoteQuestion, updateNoteTime, getStudentDetail, getNotesById, getStudentDetail, getQuestionsForNotes }
+                    insertNoteQuestion, updateNoteTime, getStudentDetail, getNotesById, getStudentDetail, getQuestionsForNotes, getFilteredTutorials }

@@ -12,33 +12,36 @@
         crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
         crossorigin="anonymous"></script>
-
+    <script src="https://kit.fontawesome.com/13fa977ac7.js" crossorigin="anonymous"></script>
+    
     <body>
-        <nav class="navbar navbar-light bg-light">
-            <a class="navbar-brand" href="/">
-                <img src="https://is5-ssl.mzstatic.com/image/thumb/Purple124/v4/f7/32/46/f732468a-6c89-2e75-9f3d-b0fa7db7e789/source/512x512bb.jpg"
-                    width="30" height="30" class="d-inline-block align-top" alt=""> NoteMaker
-            </a>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent"></div>
-            <ul class=" nav navbar-nav ml-auto" style="display: inline;">
-                <li class="nav-item ">
-                    <a class="nav-link " href="/">Login </a>
-                </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true"
-                        aria-expanded="false">
+        <div>
+        <nav class="navbar navbar-expand-lg  navbar-dark bg-dark">
+                <span style="color:white; padding-right: 4px;" class="fas fa-book"></span>
+                <a class="navbar-brand" href="/">NoteMaker</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse justify-content-end" id="navbarNavDropdown">
+                <ul class="navbar-nav ">
+                    <li class="nav-item">
+                    <a class="nav-link active" href="/">Login</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle active" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         Sign Up
                     </a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="/studentSignup">Student</a>
-                        <a class="dropdown-item" href="/teacherSignup">Teacher</a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                        <a class="dropdown-item" href="/studentSignUp">Student</a>
+                        <a class="dropdown-item" href="/teacherSignUp">Teacher</a>
                     </div>
-                </li>
-            </ul>
+                    </li>
+                </ul>
+                </div>
+            </nav>
             </div>
-        </nav>
-    </body>
+        </body>
 
-</head>
-
-</html>
+    </head>
+    
+    </html>

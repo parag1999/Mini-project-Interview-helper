@@ -20,7 +20,7 @@ const selectQuestionsList = [{ subject: "Data Structures", question: "sdgsfgasg"
 { subject: "Microprocessors", question: "sdgsfgasg", answer: "vasfvfsdv", duration: 2 },
 ]
 let subjectOptions = ["Data Structures","Algorithms","Computer Networks","Microprocessors"]
-
+let filterOptions = ["ALL","Data Structures","Algorithms","Computer Networks","Microprocessors"]
 // USER LOGIN AND SIGN UP
 
 app.get("/", function (req, res) {
@@ -309,6 +309,31 @@ app.post('/updateQuestion', async (req, res) => {
 
 })
 
+app.post('/filterTutorials', (req, res) => {
+    if (req.cookies["testCookie"]) {
+        let subject = req.body.subject
+        res.redirect('filteredTutorials/'+subject)
+    }
+    else {
+        res.status(400).json({ message: "You are not logged In" })
+    }    
+});
+
+app.get('/filteredTutorials/:subject',async (req, res) => {
+    if (req.cookies["testCookie"]) {
+        let subject = req.params.subject
+        let tutorials = await query.getFilteredTutorials(subject)
+        let subjects = [...filterOptions]
+        let i = subjects.findIndex(val => val === subject)
+        let first = subjects[0]
+        subjects.splice(0, 1, subjects[i])
+        subjects[i] = first
+        res.render('studentDashboard/tutorials',{tutorials: tutorials, subjectOptions: subjects})
+    }
+    else {
+        res.status(400).json({ message: "You are not logged In" })
+    }
+});
 /////////////////////////////////////////////////////////////
 // TEACHER AND TUTORIALS
 
@@ -322,13 +347,16 @@ app.post('/postTutorial', async (req, res) => {
         var newTutorial = {}
         newTutorial["subject"] = req.body.subject
         newTutorial["link"] = req.body.link
+        var regexExp =new RegExp(/((\/\w+$))/) 
+        newTutorial["link"] = regexExp.exec(newTutorial["link"])
+        newTutorial["link"] = newTutorial["link"][0]
         newTutorial["userId"] = JSON.parse(req.cookies["testCookie"]).userId
         let affectedRows = await query.insertTutorial(newTutorial)
         if (affectedRows) {
             res.redirect('/listTutorials')
         }
         else {
-            res.status(400).json({ message: "Wrong Entry" })
+            res.status(400).json({ message: "Wrong Entry"+newTutorial["link"],  })
         }
     }
     else {
@@ -353,7 +381,7 @@ app.get('/deleteTutorial/:tutorialId', async (req, res) => {
         let affectedRows = await query.deleteTutorial(req.params.tutorialId)
         if (affectedRows) {
             let userId = JSON.parse(req.cookies["testCookie"]).userId
-            res.redirect('/listTutorials/' + userId)
+            res.redirect('/listTutorials')
         }
         else {
             res.status(400).json({ message: "Tutorial wasn't deleted" })
