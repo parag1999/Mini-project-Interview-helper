@@ -5,11 +5,13 @@ let multer = require("multer");
 const upload = multer({ dest: __dirname + '/uploads' });
 let query = require('/home/parag/Desktop/dbms_project/db/query.js')
 let cookieParser = require('cookie-parser')
+const PDFDocument = require('pdfkit')
 
 app.set('view engine', 'ejs');
 app.use(cookieParser())
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use('/uploads', express.static('uploads'));
+// app.use('/pdf', pdf);
 
 const selectQuestionsList = [{ subject: "Data Structures", question: "sdgsfgasg", answer: "vasfvfsdv", duration: 2 },
 { subject: "Data Structures", question: "sdgsfgasg", answer: "vasfvfsdv", duration: 2 },
@@ -194,7 +196,7 @@ app.get('/notesQuestions/:noteId', async(req, res) => {
         let noteId = req.params.noteId
         let questionsList = await query.getQuestionsForNotes(noteId)
 
-        res.render('studentDashboard/notesQuestions', { questions: questionsList})
+        res.render('studentDashboard/notesQuestions', { questions: questionsList, noteId: noteId})
     }
     else {
         res.status(400).json({ message: "You are not logged In" })
@@ -438,12 +440,45 @@ app.post('/signup', (req, res) => {
 });
 
 app.get('/test', async (req, res) => {
-    console.log(photo)
-    res.render('test', { photo: photo })
+    res.render('test')
 });
 
 
+app.post('/pdf', async (req, res) => {
+    if (req.cookies["testCookie"]) {
 
-app.listen(3000, () => {
+        let noteId = req.body.noteId
+
+        let questionsList = await query.getQuestionsForNotes(noteId)
+        console.log(questionsList)
+        let note = await query.getNotesByNoteId(noteId)
+        console.log(note)
+        const doc = new PDFDocument()
+        let filename = note.note_name
+        filename = encodeURIComponent(filename) + '.pdf'
+        res.setHeader('Content-disposition', 'attachment; filename="' + filename + '"')
+        res.setHeader('Content-type', 'application/pdf')
+        doc.fontSize(20)
+        doc.text(note.note_name,{align:"center",width:410})
+        doc.fontSize(12)
+        let content = "\n\n\n\n\n"
+        questionsList.forEach((question, index)=>{
+            content += "Question: "+(index+1)+"\n"+question.question+"\n\n"+"Answer: \n"+question.answer+"\n\n\n\n"
+        
+        })
+        doc.y = 300
+        doc.text(content, 50, 50)
+        doc.pipe(res)
+        doc.end()
+    }
+    else {
+        res.status(400).json({ message: "You are not logged In" })
+    }
+
+});
+
+
+app.listen(3001, () => {
     console.log('App listening on port 3000!');
 });
+

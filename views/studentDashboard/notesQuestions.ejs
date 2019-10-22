@@ -1,5 +1,11 @@
 <% include ../partials/studentHeader.ejs %>
-
+<form action="/pdf" method="POST">
+    <div class="form-group">
+        <label>Note ID</label>
+        <input value="<%= noteId %>" readonly type="number" name="noteId" class="form-control">
+    </div>
+    <input type="submit" value="create PDF">
+</form>
     <div class="jumbotron" style="background:transparent !important">
     <% questions.forEach(question => { %>
         <div class="card my-3">

@@ -121,6 +121,11 @@ const getNotesById = async(userId) => {
     return notes
 }
 
+const getNotesByNoteId = async(noteId) => {
+    var notes = await client.raw('SELECT * FROM notes WHERE note_id=?',[noteId]).then(result => result[0]).catch(err => console.log(err))
+    return notes[0]
+}
+
 const getQuestionsForNotes = async(noteId) => {
     var questions = await client.raw('SELECT * FROM questions WHERE question_id IN (SELECT questions_id from note_question WHERE notes_id=?)',[noteId]).then(result => result[0]).catch(err => console.log(err))
     return questions
@@ -139,4 +144,4 @@ const getFilteredTutorials = async(subject) => {
 
 module.exports = { insertTeacher, insertStudent, teacherLogin, studentLogin, insertQuestion, getQuestions, getQuestionById, getTeacherDetail, deleteQuestion, 
                     updateQuestion, insertTutorial, getTutorials, deleteTutorial, updateTutorial, getTutorialById, insertNote, getFilteredQuestions,
-                    insertNoteQuestion, updateNoteTime, getStudentDetail, getNotesById, getStudentDetail, getQuestionsForNotes, getFilteredTutorials }
+                    insertNoteQuestion, updateNoteTime, getStudentDetail, getNotesById, getStudentDetail, getQuestionsForNotes, getFilteredTutorials, getNotesByNoteId }

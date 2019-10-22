@@ -1,22 +1,26 @@
 <% include ../partials/studentHeader.ejs %>
 
-<div class="jumbotron" style="background:transparent !important">
-        <h1 class="display-4">Hello, <%= student.fname %></h1>
-    <div class="card-deck">
-        <% allNotes.forEach(note => { %>
-        <div class="card">
-            <div class="card-header">
-                <%= note.note_name %>
-            </div>
-            <div class="card-body">
-                <h5 class="card-title">Subject : <%= note.subject %></h5>
-                <p class="card-text">
-                    Total Time: <%= note.total_time %>
-                </p>
-                <a href="/notesQuestions/<%= note.note_id %>" class="btn btn-primary">View Notes</a>
-            </div>
-        </div>
-        <% }) %>
+    <div class="jumbotron">
+        <img src="<%= student.image %>" class="mx-auto d-block" style="height: 175px; width: 175px; border-radius: 50%"/>
+        <h2 class="display-4" style="text-align: center"><%= student.fname %>  <%= student.lname %></h2>
+        <h3 style="text-align: center"><%= student.stream %></h3>
+        <h4 style="text-align: center"><%= student.college_name %></h4>
     </div>
-                        
-</div>
+    <div class="jumbotron" style="background:transparent !important">
+        <div class="card-deck">
+            <% allNotes.forEach(note => { %>
+            <div class="card">
+                <div class="card-header">
+                    <%= note.note_name %>
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">Subject : <%= note.subject %></h5>
+                    <p class="card-text">
+                        Total Time: <%= note.total_time %>
+                    </p>
+                    <a href="/notesQuestions/<%= note.note_id %>" class="btn btn-primary">View Notes</a>
+                </div>
+            </div>
+            <% }) %>
+        </div>
+    </div>
