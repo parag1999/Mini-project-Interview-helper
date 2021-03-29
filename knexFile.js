@@ -4,6 +4,12 @@ module.exports = require('knex')({
       host : 'localhost',
       user : 'root',
       password : 'Parag@1999',
-      database : 'dbms_v1'
+      database : 'notemaker'
     }
   });
+
+// Teacher: parag
+// Password: parag
+
+// Student: palash
+// Password: palash

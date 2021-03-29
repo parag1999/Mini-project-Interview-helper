@@ -13,14 +13,6 @@ app.use(bodyParser.urlencoded({ extended: true }))
 app.use('/uploads', express.static('uploads'));
 // app.use('/pdf', pdf);
 
-const selectQuestionsList = [{ subject: "Data Structures", question: "sdgsfgasg", answer: "vasfvfsdv", duration: 2 },
-{ subject: "Data Structures", question: "sdgsfgasg", answer: "vasfvfsdv", duration: 2 },
-{ subject: "Data Structures", question: "sdgsfgasg", answer: "vasfvfsdv", duration: 2 },
-{ subject: "Algorithms", question: "sdgsfgasg", answer: "vasfvfsdv", duration: 2 },
-{ subject: "Algorithms", question: "sdgsfgasg", answer: "vasfvfsdv", duration: 2 },
-{ subject: "Microprocessors", question: "sdgsfgasg", answer: "vasfvfsdv", duration: 2 },
-{ subject: "Microprocessors", question: "sdgsfgasg", answer: "vasfvfsdv", duration: 2 },
-]
 let subjectOptions = ["Data Structures","Algorithms","Computer Networks","Microprocessors"]
 let filterOptions = ["ALL","Data Structures","Algorithms","Computer Networks","Microprocessors"]
 // USER LOGIN AND SIGN UP
@@ -478,7 +470,7 @@ app.post('/pdf', async (req, res) => {
 });
 
 
-app.listen(3001, () => {
+app.listen(3000, () => {
     console.log('App listening on port 3000!');
 });
 
